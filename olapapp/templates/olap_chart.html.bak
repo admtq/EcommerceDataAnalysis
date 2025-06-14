@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OLAP Chart</title>
+</head>
+<body>
+    <h1>OLAP Sales Chart</h1>
+    {{ plot_div|safe }}
+</body>
+</html>

@@ -1,0 +1,29 @@
+import pandas as pd
+import plotly.express as px
+from plotly.offline import plot
+from django.shortcuts import render
+
+def olap_chart_view(request):
+    df = pd.read_csv('OLAP_data.csv')  # sesuaikan path-nya
+
+    # Transformasi wide → long
+    df_long = pd.melt(
+        df,
+        id_vars=['category'],
+        value_vars=[f'sales_month_{i}' for i in range(1, 13)],
+        var_name='month',
+        value_name='sales'
+    )
+    df_long['month'] = df_long['month'].str.extract('(\d+)').astype(int)
+
+    # Visualisasi
+    fig = px.line(
+        df_long,
+        x='month',
+        y='sales',
+        color='category',
+        title='Sales per Category per Month'
+    )
+    plot_div = plot(fig, output_type='div')
+
+    return render(request, 'olap_chart.html', context={'plot_div': plot_div})
